@@ -69,6 +69,26 @@ Declare prerequisites in `meta.prerequisites` for intermediate and advanced cour
   ("Bar chart: gas provides 40% of electricity, the largest share"), not "image" or the file name.
 - Avoid text inside images; when unavoidable, keep it large and in the course language.
 
+## Phones first
+
+Most learners follow courses on a phone (about 360 px wide). The player adapts the layout, but the content must
+read well on a small screen too:
+
+- **Steps**: one idea, about 80–180 words. Short paragraphs (2–4 sentences); use lists for sequences.
+- **Charts**: never set `width`; prefer horizontal bars when category names are long; at most about 8
+  categories; category labels under about 16 characters; legends with few entries.
+- **Diagrams**: up to about 8 nodes with labels of 1–3 words. Left-to-right flowcharts are drawn top-down on
+  phones automatically, so keep them simple. Sequence diagrams: at most 4 participants. Avoid `gantt` and
+  `journey` (they scroll sideways); use a `timeline` animation instead.
+- **Tables**: at most 4 columns and short cells; split a wide table in two, or turn it into a list.
+- **Images and SVG**: give SVGs a `viewBox` and no fixed `width`/`height`; text inside an image must stay
+  readable when the image is 340 px wide (about 14 px or larger at that size). Prefer portrait or square
+  images for tall content.
+- **Formulas and code**: keep lines short (about 40 characters); break long formulas into steps.
+
+`coursmith validate` reports layouts that do not fit a phone as `mobile.*` warnings: fix them unless the
+content really needs the space.
+
 ## Final quiz
 
 - At least 10 questions; spread them so every section is tested, roughly in proportion to its length.

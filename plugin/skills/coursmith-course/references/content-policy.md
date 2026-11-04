@@ -3,7 +3,10 @@
 Courses must be educational, accurate and respectful. The review agent applies these rules to all text,
 charts, diagrams, animations and images in a course.
 
-## Not allowed (the course is rejected)
+## Not allowed
+
+A course built around any of this is rejected. If only some parts of an otherwise legitimate course contain it,
+those parts must be rewritten or removed before the course can be published.
 
 - **Hate and harassment**: content that demeans or attacks people for ethnicity, nationality, religion,
   gender, sexual orientation, disability, age or similar traits; slurs; targeted harassment of real people.
@@ -20,7 +23,7 @@ charts, diagrams, animations and images in a course.
   people or organizations, plagiarism of copyrighted works.
 - **Spam**: advertising, affiliate links, courses whose purpose is to sell something rather than to teach.
 
-## Sensitive topics (allowed with care; otherwise revision is required)
+## Sensitive topics (allowed with care; otherwise the reviewer recommends changes)
 
 Health and medicine, mental health, law, personal finance and investing, politics, religion, history of
 conflicts and atrocities, sexuality education, drugs and addiction (prevention and awareness).
@@ -31,7 +34,7 @@ Courses on these topics must:
   learners to qualified professionals;
 - describe difficult events without graphic detail and with respect for victims.
 
-## Quality requirements (revision is required when not met)
+## Quality requirements (the reviewer recommends improvements; the author decides whether to apply them)
 
 - **Accuracy**: no factual errors, outdated claims presented as current, or invented data. Example figures
   must be labelled as illustrative.

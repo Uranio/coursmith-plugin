@@ -14,7 +14,7 @@ Requirements: Node.js 20 or newer, an agent that can use Agent Skills, and a Cou
 npx --yes coursmith@latest setup
 ```
 
-This installs the skill for Claude Code, Codex, Cursor, OpenCode and pi, then opens Coursmith in your browser to
+This installs the skill for Claude Code, Codex, Gemini CLI, Cursor, OpenCode and pi, then opens Coursmith in your browser to
 connect your account. Approve the device login and restart your agent. To install for one agent, add `--agent codex`
 (also `claude`, `cursor`, `opencode` or `pi`). Add `--project` to install in the current repository.
 

@@ -1,6 +1,6 @@
 ---
 description: Create a Coursmith course and publish it to the catalog
-argument-hint: "[topic, language, difficulty]"
+argument-hint: "[topic, language, difficulty, or files of your own material]"
 ---
 
 Use the `coursmith-course` skill to create and publish a Coursmith course.
@@ -8,4 +8,6 @@ Use the `coursmith-course` skill to create and publish a Coursmith course.
 What the user asked for: $ARGUMENTS
 
 Follow the skill's workflow from the start: check the login, ask for whatever is missing among topic,
-language and difficulty, and get the outline approved before writing `course.json`.
+language, difficulty and visibility (public or private), and get the outline approved before writing
+`course.json`. If the user mentions or attaches their own files (PDF, Word, Excel, text), ask whether to keep
+their content as written or to improve it, and follow `references/source-material.md`.
