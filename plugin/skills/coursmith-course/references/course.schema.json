@@ -676,6 +676,129 @@
                                 "highlights"
                               ],
                               "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "preset": {
+                                  "type": "string",
+                                  "const": "svg-motion"
+                                },
+                                "asset": {
+                                  "type": "string",
+                                  "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                  "description": "An asset of kind `svg` whose animated elements have `id` attributes."
+                                },
+                                "loop": {
+                                  "default": true,
+                                  "type": "boolean"
+                                },
+                                "tracks": {
+                                  "minItems": 1,
+                                  "maxItems": 20,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "elementId": {
+                                        "type": "string",
+                                        "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+                                        "description": "`id` attribute of an element in the SVG."
+                                      },
+                                      "keyframes": {
+                                        "minItems": 2,
+                                        "maxItems": 12,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "at": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 30,
+                                              "description": "Time in seconds from the start."
+                                            },
+                                            "opacity": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 1
+                                            },
+                                            "x": {
+                                              "description": "Horizontal offset in SVG units.",
+                                              "type": "number",
+                                              "minimum": -2000,
+                                              "maximum": 2000
+                                            },
+                                            "y": {
+                                              "description": "Vertical offset in SVG units.",
+                                              "type": "number",
+                                              "minimum": -2000,
+                                              "maximum": 2000
+                                            },
+                                            "rotate": {
+                                              "description": "Degrees, around the element's center.",
+                                              "type": "number",
+                                              "minimum": -3600,
+                                              "maximum": 3600
+                                            },
+                                            "scale": {
+                                              "type": "number",
+                                              "minimum": 0.05,
+                                              "maximum": 20
+                                            },
+                                            "fill": {
+                                              "type": "string",
+                                              "pattern": "^#[0-9a-fA-F]{6}$"
+                                            }
+                                          },
+                                          "required": [
+                                            "at"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "description": "Values not given in a keyframe keep the element's original value."
+                                      }
+                                    },
+                                    "required": [
+                                      "elementId",
+                                      "keyframes"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "labels": {
+                                  "default": [],
+                                  "description": "Captions shown while the animation plays, from their time on.",
+                                  "maxItems": 12,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "at": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 30
+                                      },
+                                      "text": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 160
+                                      }
+                                    },
+                                    "required": [
+                                      "at",
+                                      "text"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                }
+                              },
+                              "required": [
+                                "preset",
+                                "asset",
+                                "tracks"
+                              ],
+                              "additionalProperties": false
                             }
                           ]
                         }
@@ -707,6 +830,598 @@
                       "required": [
                         "type",
                         "asset"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "simulator"
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "description": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        },
+                        "controls": {
+                          "minItems": 1,
+                          "maxItems": 6,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "type": "number"
+                              },
+                              "step": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              },
+                              "value": {
+                                "type": "number",
+                                "description": "Starting value, between min and max."
+                              },
+                              "unit": {
+                                "type": "string",
+                                "maxLength": 12
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "label",
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Sliders the learner moves."
+                        },
+                        "outputs": {
+                          "default": [],
+                          "description": "Values recomputed live from the controls.",
+                          "maxItems": 6,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "formula": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "description": "Formula over the control ids: + - * / % ^, comparisons, cond ? a : b, functions like sqrt, sin, min, clamp."
+                              },
+                              "unit": {
+                                "type": "string",
+                                "maxLength": 12
+                              },
+                              "decimals": {
+                                "default": 2,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 6
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "formula"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "chart": {
+                          "description": "A live line chart of the series formulas over x.",
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$",
+                                  "description": "Name of the horizontal variable, usable in the series formulas."
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "from": {
+                                  "type": "number"
+                                },
+                                "to": {
+                                  "type": "number"
+                                },
+                                "points": {
+                                  "default": 60,
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 200
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label",
+                                "from",
+                                "to"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "yLabel": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 60
+                            },
+                            "yMin": {
+                              "type": "number"
+                            },
+                            "yMax": {
+                              "type": "number"
+                            },
+                            "series": {
+                              "minItems": 1,
+                              "maxItems": 4,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 60
+                                  },
+                                  "formula": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "description": "Formula over the control ids: + - * / % ^, comparisons, cond ? a : b, functions like sqrt, sin, min, clamp."
+                                  }
+                                },
+                                "required": [
+                                  "label",
+                                  "formula"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "yLabel",
+                            "series"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "caption": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "controls"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "scene3d"
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "objects": {
+                          "minItems": 1,
+                          "maxItems": 60,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "shape": {
+                                "type": "string",
+                                "enum": [
+                                  "box",
+                                  "sphere",
+                                  "cylinder",
+                                  "cone",
+                                  "torus",
+                                  "plane"
+                                ]
+                              },
+                              "position": {
+                                "default": [
+                                  0,
+                                  0,
+                                  0
+                                ],
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              },
+                              "rotation": {
+                                "default": [
+                                  0,
+                                  0,
+                                  0
+                                ],
+                                "description": "Degrees around x, y, z.",
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              },
+                              "size": {
+                                "default": [
+                                  1,
+                                  1,
+                                  1
+                                ],
+                                "description": "Width, height, depth. Spheres use the width as diameter; tori use width (outer) and depth (tube).",
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              },
+                              "color": {
+                                "default": "#8b7cf6",
+                                "type": "string",
+                                "pattern": "^#[0-9a-fA-F]{6}$"
+                              },
+                              "opacity": {
+                                "default": 1,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 1
+                              },
+                              "wireframe": {
+                                "default": false,
+                                "type": "boolean"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "motion": {
+                                "description": "spin: around its own center; orbit: around the scene origin; bob: up and down; pulse: grows and shrinks.",
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "spin",
+                                      "orbit",
+                                      "bob",
+                                      "pulse"
+                                    ]
+                                  },
+                                  "axis": {
+                                    "default": "y",
+                                    "type": "string",
+                                    "enum": [
+                                      "x",
+                                      "y",
+                                      "z"
+                                    ]
+                                  },
+                                  "speed": {
+                                    "default": 1,
+                                    "type": "number",
+                                    "minimum": 0.1,
+                                    "maximum": 5
+                                  }
+                                },
+                                "required": [
+                                  "kind"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "shape"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "arrows": {
+                          "default": [],
+                          "maxItems": 30,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "from": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              },
+                              "to": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              },
+                              "color": {
+                                "default": "#f5f5f7",
+                                "type": "string",
+                                "pattern": "^#[0-9a-fA-F]{6}$"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "from",
+                              "to"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "camera": {
+                          "type": "object",
+                          "properties": {
+                            "position": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "number",
+                                  "minimum": -1000,
+                                  "maximum": 1000
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": -1000,
+                                  "maximum": 1000
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": -1000,
+                                  "maximum": 1000
+                                }
+                              ],
+                              "items": false,
+                              "minItems": 3,
+                              "maxItems": 3
+                            },
+                            "target": {
+                              "default": [
+                                0,
+                                0,
+                                0
+                              ],
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "number",
+                                  "minimum": -1000,
+                                  "maximum": 1000
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": -1000,
+                                  "maximum": 1000
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": -1000,
+                                  "maximum": 1000
+                                }
+                              ],
+                              "items": false,
+                              "minItems": 3,
+                              "maxItems": 3
+                            }
+                          },
+                          "required": [
+                            "position"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "autoRotate": {
+                          "default": false,
+                          "type": "boolean"
+                        },
+                        "grid": {
+                          "default": false,
+                          "type": "boolean"
+                        },
+                        "axes": {
+                          "default": false,
+                          "description": "Shows x (red), y (green) and z (blue) axes.",
+                          "type": "boolean"
+                        },
+                        "caption": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "objects"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "hotspots"
+                        },
+                        "asset": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "The image the spots sit on."
+                        },
+                        "spots": {
+                          "minItems": 1,
+                          "maxItems": 12,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "description": "Percent from the left edge."
+                              },
+                              "y": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "description": "Percent from the top edge."
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
+                              "text": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 400
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y",
+                              "title",
+                              "text"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "caption": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "asset",
+                        "spots"
                       ],
                       "additionalProperties": false
                     }
@@ -1374,6 +2089,129 @@
                                   "highlights"
                                 ],
                                 "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "preset": {
+                                    "type": "string",
+                                    "const": "svg-motion"
+                                  },
+                                  "asset": {
+                                    "type": "string",
+                                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                    "description": "An asset of kind `svg` whose animated elements have `id` attributes."
+                                  },
+                                  "loop": {
+                                    "default": true,
+                                    "type": "boolean"
+                                  },
+                                  "tracks": {
+                                    "minItems": 1,
+                                    "maxItems": 20,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "elementId": {
+                                          "type": "string",
+                                          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+                                          "description": "`id` attribute of an element in the SVG."
+                                        },
+                                        "keyframes": {
+                                          "minItems": 2,
+                                          "maxItems": 12,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "at": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 30,
+                                                "description": "Time in seconds from the start."
+                                              },
+                                              "opacity": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 1
+                                              },
+                                              "x": {
+                                                "description": "Horizontal offset in SVG units.",
+                                                "type": "number",
+                                                "minimum": -2000,
+                                                "maximum": 2000
+                                              },
+                                              "y": {
+                                                "description": "Vertical offset in SVG units.",
+                                                "type": "number",
+                                                "minimum": -2000,
+                                                "maximum": 2000
+                                              },
+                                              "rotate": {
+                                                "description": "Degrees, around the element's center.",
+                                                "type": "number",
+                                                "minimum": -3600,
+                                                "maximum": 3600
+                                              },
+                                              "scale": {
+                                                "type": "number",
+                                                "minimum": 0.05,
+                                                "maximum": 20
+                                              },
+                                              "fill": {
+                                                "type": "string",
+                                                "pattern": "^#[0-9a-fA-F]{6}$"
+                                              }
+                                            },
+                                            "required": [
+                                              "at"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          "description": "Values not given in a keyframe keep the element's original value."
+                                        }
+                                      },
+                                      "required": [
+                                        "elementId",
+                                        "keyframes"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "labels": {
+                                    "default": [],
+                                    "description": "Captions shown while the animation plays, from their time on.",
+                                    "maxItems": 12,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "at": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 30
+                                        },
+                                        "text": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 160
+                                        }
+                                      },
+                                      "required": [
+                                        "at",
+                                        "text"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "preset",
+                                  "asset",
+                                  "tracks"
+                                ],
+                                "additionalProperties": false
                               }
                             ]
                           }
@@ -1381,6 +2219,642 @@
                         "required": [
                           "type",
                           "animation"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "simulator"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "description": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          },
+                          "controls": {
+                            "minItems": 1,
+                            "maxItems": 6,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "min": {
+                                  "type": "number"
+                                },
+                                "max": {
+                                  "type": "number"
+                                },
+                                "step": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "description": "Starting value, between min and max."
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "maxLength": 12
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label",
+                                "min",
+                                "max",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "description": "Sliders the learner moves."
+                          },
+                          "outputs": {
+                            "default": [],
+                            "description": "Values recomputed live from the controls.",
+                            "maxItems": 6,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "formula": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "description": "Formula over the control ids: + - * / % ^, comparisons, cond ? a : b, functions like sqrt, sin, min, clamp."
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "maxLength": 12
+                                },
+                                "decimals": {
+                                  "default": 2,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 6
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "formula"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "chart": {
+                            "description": "A live line chart of the series formulas over x.",
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$",
+                                    "description": "Name of the horizontal variable, usable in the series formulas."
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 60
+                                  },
+                                  "from": {
+                                    "type": "number"
+                                  },
+                                  "to": {
+                                    "type": "number"
+                                  },
+                                  "points": {
+                                    "default": 60,
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 200
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "label",
+                                  "from",
+                                  "to"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "yLabel": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "yMin": {
+                                "type": "number"
+                              },
+                              "yMax": {
+                                "type": "number"
+                              },
+                              "series": {
+                                "minItems": 1,
+                                "maxItems": 4,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "label": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "formula": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "description": "Formula over the control ids: + - * / % ^, comparisons, cond ? a : b, functions like sqrt, sin, min, clamp."
+                                    }
+                                  },
+                                  "required": [
+                                    "label",
+                                    "formula"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "yLabel",
+                              "series"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "caption": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "controls"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "scene3d"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "objects": {
+                            "minItems": 1,
+                            "maxItems": 60,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "shape": {
+                                  "type": "string",
+                                  "enum": [
+                                    "box",
+                                    "sphere",
+                                    "cylinder",
+                                    "cone",
+                                    "torus",
+                                    "plane"
+                                  ]
+                                },
+                                "position": {
+                                  "default": [
+                                    0,
+                                    0,
+                                    0
+                                  ],
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                },
+                                "rotation": {
+                                  "default": [
+                                    0,
+                                    0,
+                                    0
+                                  ],
+                                  "description": "Degrees around x, y, z.",
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                },
+                                "size": {
+                                  "default": [
+                                    1,
+                                    1,
+                                    1
+                                  ],
+                                  "description": "Width, height, depth. Spheres use the width as diameter; tori use width (outer) and depth (tube).",
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                },
+                                "color": {
+                                  "default": "#8b7cf6",
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                },
+                                "opacity": {
+                                  "default": 1,
+                                  "type": "number",
+                                  "minimum": 0.1,
+                                  "maximum": 1
+                                },
+                                "wireframe": {
+                                  "default": false,
+                                  "type": "boolean"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "motion": {
+                                  "description": "spin: around its own center; orbit: around the scene origin; bob: up and down; pulse: grows and shrinks.",
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "enum": [
+                                        "spin",
+                                        "orbit",
+                                        "bob",
+                                        "pulse"
+                                      ]
+                                    },
+                                    "axis": {
+                                      "default": "y",
+                                      "type": "string",
+                                      "enum": [
+                                        "x",
+                                        "y",
+                                        "z"
+                                      ]
+                                    },
+                                    "speed": {
+                                      "default": 1,
+                                      "type": "number",
+                                      "minimum": 0.1,
+                                      "maximum": 5
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "shape"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "arrows": {
+                            "default": [],
+                            "maxItems": 30,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "from": {
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                },
+                                "to": {
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                },
+                                "color": {
+                                  "default": "#f5f5f7",
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                }
+                              },
+                              "required": [
+                                "from",
+                                "to"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "camera": {
+                            "type": "object",
+                            "properties": {
+                              "position": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              },
+                              "target": {
+                                "default": [
+                                  0,
+                                  0,
+                                  0
+                                ],
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              }
+                            },
+                            "required": [
+                              "position"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "autoRotate": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "grid": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "axes": {
+                            "default": false,
+                            "description": "Shows x (red), y (green) and z (blue) axes.",
+                            "type": "boolean"
+                          },
+                          "caption": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "objects"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "hotspots"
+                          },
+                          "asset": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                            "description": "The image the spots sit on."
+                          },
+                          "spots": {
+                            "minItems": 1,
+                            "maxItems": 12,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 100,
+                                  "description": "Percent from the left edge."
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 100,
+                                  "description": "Percent from the top edge."
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 400
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y",
+                                "title",
+                                "text"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "caption": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "asset",
+                          "spots"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "flashcards"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "cards": {
+                            "minItems": 2,
+                            "maxItems": 24,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "front": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 200
+                                },
+                                "back": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 400
+                                }
+                              },
+                              "required": [
+                                "front",
+                                "back"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "cards"
                         ],
                         "additionalProperties": false
                       }

@@ -522,6 +522,24 @@
               "variant": "example",
               "title": "Quick calculation",
               "text": "A 2 [[kilowatt|kW]] oven used for 1.5 hours consumes 2 × 1.5 = 3 kWh."
+            },
+            {
+              "type": "flashcards",
+              "title": "Units on your bill",
+              "cards": [
+                {
+                  "front": "Kilowatt (kW)",
+                  "back": "A unit of power: how fast energy is used. 1 kW = 1,000 W."
+                },
+                {
+                  "front": "Kilowatt-hour (kWh)",
+                  "back": "A unit of energy: 1 kW used for one hour."
+                },
+                {
+                  "front": "Energy consumption",
+                  "back": "The kWh your home used in the billing period."
+                }
+              ]
             }
           ],
           "check": {
@@ -544,6 +562,70 @@
             ],
             "correct": "b",
             "explanation": "Energy = power × time = 1 kW × 4 h = 4 kWh."
+          },
+          "visual": {
+            "type": "simulator",
+            "title": "What an appliance costs to run",
+            "controls": [
+              {
+                "id": "watts",
+                "label": "Power",
+                "min": 5,
+                "max": 3000,
+                "step": 5,
+                "value": 1000,
+                "unit": "W"
+              },
+              {
+                "id": "hours",
+                "label": "Use per day",
+                "min": 0.5,
+                "max": 24,
+                "step": 0.5,
+                "value": 2,
+                "unit": "h"
+              },
+              {
+                "id": "price",
+                "label": "Price",
+                "min": 0.05,
+                "max": 0.6,
+                "step": 0.01,
+                "value": 0.25,
+                "unit": "€/kWh"
+              }
+            ],
+            "outputs": [
+              {
+                "label": "Energy per day",
+                "formula": "watts * hours / 1000",
+                "unit": "kWh",
+                "decimals": 2
+              },
+              {
+                "label": "Cost per month",
+                "formula": "watts * hours / 1000 * price * 30",
+                "unit": "€",
+                "decimals": 2
+              }
+            ],
+            "chart": {
+              "x": {
+                "id": "day",
+                "label": "Days",
+                "from": 0,
+                "to": 365,
+                "points": 60
+              },
+              "yLabel": "Total cost (€)",
+              "series": [
+                {
+                  "label": "Cost",
+                  "formula": "watts * hours / 1000 * price * day"
+                }
+              ]
+            },
+            "caption": "Illustrative prices. Energy in kWh is power in kW times hours."
           }
         }
       ],

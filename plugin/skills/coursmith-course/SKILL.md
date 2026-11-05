@@ -19,8 +19,8 @@ Reference files in this skill folder (read them when you reach the matching step
 | File | Use it for |
 |---|---|
 | `references/course.schema.json` | The exact structure of `course.json`. Unknown keys are rejected. |
-| `references/block-catalog.md` | Every content block and visual, with valid JSON examples and rules. |
-| `references/animation-presets.md` | The 7 animation presets and when to use each. |
+| `references/block-catalog.md` | Every content block and visual (simulators, 3D scenes, hotspots, flashcards too), with valid JSON examples and rules. |
+| `references/animation-presets.md` | The 8 animation presets (including keyframed `svg-motion`) and when to use each. |
 | `references/writing-guide.md` | How to write steps, glossaries and quizzes that pass review. |
 | `references/content-policy.md` | What is not allowed and how to treat sensitive topics. |
 | `references/source-material.md` | Building a course from the user's own files (PDF, Word, Excel, text). |
@@ -58,7 +58,8 @@ Show the user:
 
 - title, one-line subtitle, 2–6 learning objectives;
 - 3–6 sections, each with a one-line summary and 2–5 step titles;
-- for each step, the visual you plan (chart, diagram, animation preset, image or none);
+- for each step, the visual you plan (chart, diagram, animation preset, simulator, 3D scene, hotspots, image or
+  none);
 - the planned number of quiz questions (at least 10, covering every section).
 
 Revise until the user agrees. Do not write `course.json` before that.
@@ -79,7 +80,10 @@ Rules the validator enforces (details in `references/block-catalog.md`):
   wording differs (use `aliases` for plurals and inflections). A marked term must be defined in the same
   section or an earlier one. Definitions are self-contained and written in the course language.
 - **Visuals**: charts are Vega-Lite specs with inline `data.values` (no URLs); diagrams are Mermaid without
-  `click` or `%%{init}%%`; animations use one of the 7 presets; images refer to an asset by id.
+  `click` or `%%{init}%%`; animations use one of the 8 presets; images refer to an asset by id.
+- **Interactive elements**: `simulator` (sliders and live formulas), `scene3d` (rotatable 3D primitives),
+  `hotspots` (tappable points on an image) and `flashcards`. Use them where manipulating something teaches
+  better than reading about it; formulas use only the simulator's own controls.
 - **Markdown**: no raw HTML, no Markdown images (use an image block), links must be `https://`.
 - **Final quiz**: at least 10 questions; every section is tested by at least one question (`sectionRef`);
   every question has an `explanation`. Types: `single`, `multiple`, `true_false`, `ordering`

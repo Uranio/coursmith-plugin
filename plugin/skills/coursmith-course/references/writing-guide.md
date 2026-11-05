@@ -64,7 +64,12 @@ Declare prerequisites in `meta.prerequisites` for intermediate and advanced cour
 - Every visual must teach something the text refers to; mention it in the text ("the chart shows…").
 - Charts: one message per chart, labelled axes with units, sorted bars, at most about 8 categories.
 - Diagrams: at most about 10 nodes; short labels.
-- Pick the animation preset that matches the idea (see `animation-presets.md`).
+- Pick the animation preset that matches the idea (see `animation-presets.md`); `svg-motion` animates your own
+  drawing when no preset fits.
+- Make it interactive where it helps understanding: a `simulator` when a value depends on others, a `scene3d`
+  for shapes and spatial structures, `hotspots` for the parts of a picture, `flashcards` to review terms. Aim for
+  at least one interactive element per section, and always explain in the text what the learner should try
+  ("move the voltage slider and watch the current").
 - Alt text describes what the image shows and why it matters, in the course language
   ("Bar chart: gas provides 40% of electricity, the largest share"), not "image" or the file name.
 - Avoid text inside images; when unavoidable, keep it large and in the course language.

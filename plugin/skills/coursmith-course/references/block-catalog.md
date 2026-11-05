@@ -4,8 +4,9 @@ Every step has `blocks` (the text and media the learner reads, in order) and an 
 step's main illustration). The portal shows the visual pinned beside the text in scrollytelling, split
 screen in the stepper and slides, and inline in document mode.
 
-- `blocks` accepts: `markdown`, `callout`, `image`, `code`, `math`, `table`, `quote`, `chart`, `diagram`, `animation`.
-- `visual` accepts: `chart`, `diagram`, `animation`, `image`.
+- `blocks` accepts: `markdown`, `callout`, `image`, `code`, `math`, `table`, `quote`, `chart`, `diagram`, `animation`,
+  `simulator`, `scene3d`, `hotspots`, `flashcards`.
+- `visual` accepts: `chart`, `diagram`, `animation`, `image`, `simulator`, `scene3d`, `hotspots`.
 - Unknown keys are rejected everywhere. Optional `caption` fields are shown under the element.
 
 All examples below pass `coursmith validate`.
@@ -151,7 +152,7 @@ Not allowed: `click` handlers, links (`href`) and `%%{init: ...}%%` directives.
 
 ### animation
 
-An animation is a preset rendered by the portal from parameters. See `animation-presets.md` for all seven.
+An animation is a preset rendered by the portal from parameters. See `animation-presets.md` for all eight.
 
 ```json visual
 {
@@ -165,6 +166,111 @@ An animation is a preset rendered by the portal from parameters. See `animation-
       { "title": "Distribution", "description": "Local lines deliver 230 V." }
     ]
   }
+}
+```
+
+## Interactive blocks
+
+Learners remember what they manipulate. Use these where the idea is about **change** (a value that depends on
+others), **space** (a shape, a structure, a position) or **recall** (terms to learn by heart). Everything is
+declarative: you describe the element, the portal draws it; no code runs from a course.
+
+### simulator
+
+Sliders (`controls`) drive live values (`outputs`) and an optional live line `chart`. Formulas use the control
+`id`s (and, in chart series, the `x.id` variable) with `+ - * / % ^`, comparisons, `&&`, `||`, `!`,
+`cond ? a : b`, the constants `pi` and `e`, and these functions: `sin cos tan asin acos atan atan2 sqrt cbrt abs
+exp ln log10 log2 pow floor ceil round sign hypot min max clamp deg rad` (angles in radians; `rad(30)` converts).
+Every control needs `min < value < max`; give `step` for whole numbers. At most 6 controls, 6 outputs, 4 series.
+
+```json visual
+{
+  "type": "simulator",
+  "title": "How much does an appliance cost to run?",
+  "controls": [
+    { "id": "watts", "label": "Power", "min": 5, "max": 3000, "step": 5, "value": 1000, "unit": "W" },
+    { "id": "hours", "label": "Use per day", "min": 0.5, "max": 24, "step": 0.5, "value": 2, "unit": "h" },
+    { "id": "price", "label": "Price", "min": 0.05, "max": 0.6, "step": 0.01, "value": 0.25, "unit": "€/kWh" }
+  ],
+  "outputs": [
+    { "label": "Energy per day", "formula": "watts * hours / 1000", "unit": "kWh", "decimals": 2 },
+    { "label": "Cost per month", "formula": "watts * hours / 1000 * price * 30", "unit": "€", "decimals": 2 }
+  ],
+  "chart": {
+    "x": { "id": "day", "label": "Days", "from": 0, "to": 365, "points": 60 },
+    "yLabel": "Total cost (€)",
+    "series": [{ "label": "Cost", "formula": "watts * hours / 1000 * price * day" }]
+  },
+  "caption": "Move the sliders: cost grows with both power and time."
+}
+```
+
+Ideas: physics laws (Ohm, free fall, pendulum), compound interest, population growth, dose–response, chemical
+equilibria, unit conversions, probability of independent events. State the formula in the text too, so the
+simulator illustrates it rather than replacing the explanation.
+
+### scene3d
+
+A 3D scene built from primitives the learner can rotate (drag) and zoom (pinch or scroll). Shapes: `box`,
+`sphere`, `cylinder`, `cone`, `torus`, `plane`. `size` is width, height, depth (a sphere's diameter is the
+width; a torus uses width as outer diameter and depth as tube thickness). `rotation` is in degrees. Optional
+`label` text floats above an object; `motion` animates it: `spin`, `orbit` (around the origin), `bob`, `pulse`.
+`arrows` draw vectors. Up to 60 objects and 30 arrows. Use `#rrggbb` colors.
+
+```json visual
+{
+  "type": "scene3d",
+  "title": "A water molecule",
+  "objects": [
+    { "shape": "sphere", "size": [1.4, 1.4, 1.4], "color": "#ef4444", "label": "Oxygen" },
+    { "shape": "sphere", "position": [1.1, -0.8, 0], "size": [0.8, 0.8, 0.8], "color": "#f1f5f9", "label": "Hydrogen" },
+    { "shape": "sphere", "position": [-1.1, -0.8, 0], "size": [0.8, 0.8, 0.8], "color": "#f1f5f9", "label": "Hydrogen" },
+    { "shape": "cylinder", "position": [0.55, -0.4, 0], "rotation": [0, 0, 54], "size": [0.15, 1.3, 0.15], "color": "#94a3b8" },
+    { "shape": "cylinder", "position": [-0.55, -0.4, 0], "rotation": [0, 0, -54], "size": [0.15, 1.3, 0.15], "color": "#94a3b8" }
+  ],
+  "camera": { "position": [0, 1, 6] },
+  "autoRotate": true,
+  "caption": "The two hydrogen atoms sit at about 104.5° from each other."
+}
+```
+
+Ideas: molecules, crystal lattices, planets and orbits, geometric solids and their sections, vectors and forces,
+simple machines, the layers of the Earth. Keep scenes small and label what the text mentions. On phones the
+scene is about 340 px wide: avoid tiny objects that only make sense when zoomed.
+
+### hotspots
+
+Numbered points on an image (any image asset); tapping a point shows its title and text. `x` and `y` are
+percentages from the image's left and top edges. Up to 12 spots.
+
+```json visual
+{
+  "type": "hotspots",
+  "asset": "home-panel",
+  "spots": [
+    { "x": 50, "y": 15, "title": "Meter", "text": "Counts the kilowatt-hours you use." },
+    { "x": 50, "y": 58, "title": "Residual current device", "text": "Cuts the power if current leaks, for example through a person." }
+  ],
+  "caption": "Explore the panel."
+}
+```
+
+Ideas: parts of a machine, an anatomy diagram, a map, a painting's details, a user interface.
+
+### flashcards
+
+Cards with a front and a back; the learner taps to flip, and can shuffle. 2–24 cards. A good way to review the
+terms of a section right before the quiz (they are not scored).
+
+```json block
+{
+  "type": "flashcards",
+  "title": "Units to remember",
+  "cards": [
+    { "front": "Volt (V)", "back": "Unit of voltage: the electrical push." },
+    { "front": "Ampere (A)", "back": "Unit of current: how much charge flows per second." },
+    { "front": "Kilowatt-hour (kWh)", "back": "Energy used by 1,000 watts for one hour." }
+  ]
 }
 ```
 

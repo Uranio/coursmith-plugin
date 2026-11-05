@@ -19,6 +19,7 @@ Pick the preset that matches the idea, not the one that looks busiest:
 | `compare` | Before/after slider | Contrasting two states, a wrong vs right approach |
 | `counter` | Numbers counting up to a value | Orders of magnitude, key statistics |
 | `highlight-svg` | Your SVG with parts highlighted one by one | Anatomy of an object, parts of a diagram or interface |
+| `svg-motion` | Your SVG with elements moving, turning, fading or changing color over time | Mechanisms, cycles, trajectories, anything that moves |
 
 All examples below pass `coursmith validate`.
 
@@ -138,6 +139,34 @@ All examples below pass `coursmith validate`.
   "highlights": [
     { "elementId": "meter", "label": "Meter", "description": "Measures the energy you use." },
     { "elementId": "breakers", "label": "Circuit breakers", "description": "Protect each circuit." }
+  ]
+}
+```
+
+## svg-motion
+
+A keyframed animation of your own SVG: the most flexible preset. Draw the scene as an SVG asset, give an `id` to
+each element (usually a `<g>`) that moves, then describe its keyframes. The learner can play, pause and restart.
+
+- `asset`: an asset of kind `svg`. Same cleanup rules as `highlight-svg`; every `elementId` must survive it.
+- `tracks`: 1–20, each an `elementId` and 2–12 `keyframes`. A keyframe has `at` (seconds, 0–30, increasing
+  within a track) and any of: `x`, `y` (offset in SVG units), `rotate` (degrees, around the element's center),
+  `scale`, `opacity` (0–1), `fill` (`#rrggbb`). Values a keyframe leaves out carry over from the previous one.
+- `loop` (default `true`) and `labels`: captions shown from their `at` time on, to narrate what happens.
+- The animation lasts until the latest `at` across tracks. Keep it short (5–15 s) and let labels explain it.
+
+```json animation
+{
+  "preset": "svg-motion",
+  "asset": "home-panel",
+  "loop": true,
+  "tracks": [
+    { "elementId": "meter", "keyframes": [{ "at": 0, "opacity": 0.3 }, { "at": 1.5, "opacity": 1, "scale": 1.08 }, { "at": 3, "scale": 1 }] },
+    { "elementId": "breakers", "keyframes": [{ "at": 3, "opacity": 0.3 }, { "at": 4.5, "opacity": 1 }, { "at": 6, "opacity": 1 }] }
+  ],
+  "labels": [
+    { "at": 0, "text": "Electricity enters through the meter…" },
+    { "at": 3, "text": "…then splits into circuits, each protected by a breaker." }
   ]
 }
 ```
