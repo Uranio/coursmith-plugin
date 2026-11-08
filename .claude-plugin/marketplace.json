@@ -6,7 +6,7 @@
     {
       "name": "coursmith",
       "source": "./plugin",
-      "description": "Create interactive courses (steps, charts, animations, glossary, final quiz) and publish them to the Coursmith catalog."
+      "description": "Create interactive courses (steps, charts, animations, simulations, 3D, exercises, glossary, final quiz) and publish them to the Coursmith catalog."
     }
   ]
 }
