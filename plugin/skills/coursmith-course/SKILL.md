@@ -1,6 +1,6 @@
 ---
 name: coursmith-course
-description: Create an interactive course (steps, charts, diagrams, animations, images, a glossary per section and a final quiz) and publish it to the Coursmith catalog with the coursmith CLI. Use when the user asks to create, write, generate, update, publish or submit a course or lesson for Coursmith, or to check a Coursmith review.
+description: Create an interactive course (steps, charts, diagrams, animations, simulations, 3D models, exercises, a glossary per section and a final quiz) and publish it to the Coursmith catalog with the coursmith CLI. Use when the user asks to create, write, generate, update, publish or submit a course or lesson for Coursmith, or to check a Coursmith review.
 ---
 
 # Create and publish a Coursmith course
@@ -58,8 +58,10 @@ Show the user:
 
 - title, one-line subtitle, 2–6 learning objectives;
 - 3–6 sections, each with a one-line summary and 2–5 step titles;
-- for each step, the visual you plan (chart, diagram, animation preset, simulator, 3D scene, hotspots, image or
-  none);
+- for each step, the visual you plan (chart, diagram, animation preset, simulator, dynamic simulation, 3D scene,
+  molecule, hotspots, image or none);
+- the practice you plan: worked examples and exercises (essential in maths, sciences and any method), scenarios
+  for decisions, code playgrounds for programming, quick checks;
 - the planned number of quiz questions (at least 10, covering every section).
 
 Revise until the user agrees. Do not write `course.json` before that.
@@ -81,13 +83,21 @@ Rules the validator enforces (details in `references/block-catalog.md`):
   section or an earlier one. Definitions are self-contained and written in the course language.
 - **Visuals**: charts are Vega-Lite specs with inline `data.values` (no URLs); diagrams are Mermaid without
   `click` or `%%{init}%%`; animations use one of the 8 presets; images refer to an asset by id.
-- **Interactive elements**: `simulator` (sliders and live formulas), `scene3d` (rotatable 3D primitives),
-  `hotspots` (tappable points on an image) and `flashcards`. Use them where manipulating something teaches
-  better than reading about it; formulas use only the simulator's own controls.
-- **Markdown**: no raw HTML, no Markdown images (use an image block), links must be `https://`.
+- **Interactive elements**: `simulator` (sliders and live formulas), `dynamics` (systems that evolve over time),
+  `scene3d` (rotatable 3D scenes with tappable parts, exploded views and guided tours), `molecule` (3D atoms and
+  bonds), `hotspots` (tappable points on an image) and `flashcards`. Use them where manipulating something teaches
+  better than reading about it; formulas use only the block's own controls and variables.
+- **Practice**: `worked_example` (a solution revealed step by step), `exercise` (a problem with answer parts,
+  hints and a solution), `scenario` (branching decisions), `playground` (JavaScript or Python the learner runs,
+  with tests). Show a worked example, then an exercise of the same kind.
+- **Structure**: `details` (collapsible extra depth) and `tabs` (variants side by side).
+- **Markdown**: no raw HTML, no Markdown images (use an image block), links must be `https://`. Formulas go
+  between `$$…$$`, also inline; chemistry with `\ce{…}`.
+- **Questions** (11 types, in checks, exercise parts and the final quiz): `single`, `multiple`, `true_false`,
+  `ordering`, `matching`, `categorize`, `fill_blanks`, `numeric` (with tolerance and unit), `expression` (any
+  equivalent formula is accepted), `image_point` (tap a spot on an image), `chem_balance` (balance an equation).
 - **Final quiz**: at least 10 questions; every section is tested by at least one question (`sectionRef`);
-  every question has an `explanation`. Types: `single`, `multiple`, `true_false`, `ordering`
-  (ordering items are listed in the correct order; the portal shuffles them).
+  every question has an `explanation`.
 - Optional `check` questions at the end of a step give learners quick feedback and are not scored.
 
 Write section by section and keep the language, difficulty and terminology consistent throughout

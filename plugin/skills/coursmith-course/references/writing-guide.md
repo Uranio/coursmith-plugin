@@ -66,13 +66,33 @@ Declare prerequisites in `meta.prerequisites` for intermediate and advanced cour
 - Diagrams: at most about 10 nodes; short labels.
 - Pick the animation preset that matches the idea (see `animation-presets.md`); `svg-motion` animates your own
   drawing when no preset fits.
-- Make it interactive where it helps understanding: a `simulator` when a value depends on others, a `scene3d`
-  for shapes and spatial structures, `hotspots` for the parts of a picture, `flashcards` to review terms. Aim for
-  at least one interactive element per section, and always explain in the text what the learner should try
-  ("move the voltage slider and watch the current").
+- Make it interactive where it helps understanding: a `simulator` when a value depends on others, `dynamics`
+  when something changes over time, a `scene3d` for shapes and spatial structures (with `info` on the parts),
+  a `molecule` for chemistry, `hotspots` for the parts of a picture, `flashcards` to review terms. Aim for at
+  least one interactive element per section, and always explain in the text what the learner should try ("move
+  the voltage slider and watch the current").
 - Alt text describes what the image shows and why it matters, in the course language
   ("Bar chart: gas provides 40% of electricity, the largest share"), not "image" or the file name.
 - Avoid text inside images; when unavoidable, keep it large and in the course language.
+
+## Practice
+
+Learners remember what they do, not what they read. Every section should make them do something:
+
+- **Methods** (calculations, balancing, proofs, grammar, accounting): a `worked_example` first, then an
+  `exercise` of the same kind with slightly different numbers. Harder exercises later in the course.
+- **Exercises**: state all the data in `problem`; split long problems into parts (a), (b), (c); give 1–3 `hints`
+  that nudge without giving the answer away, and a `solution` that shows every step. Set `level`.
+- **Answer types that test doing, not recognizing**: `numeric` and `expression` for calculations, `fill_blanks`
+  for definitions and sequences, `chem_balance` for equations, `image_point` for anatomy, maps and diagrams,
+  `matching` and `categorize` for classifications. Use multiple choice for concepts and misconceptions.
+- **Tolerances**: numbers that come from a calculation need `tolerancePercent` (1–2%) so rounding is not
+  punished; state the precision you expect in the prompt ("to one decimal place").
+- **Decisions and judgment** (safety, care, management, ethics): a `scenario` with realistic consequences and
+  feedback on each choice.
+- **Programming**: a `playground` per key idea, with starter code and 2–4 tests; keep it short enough to read
+  on a phone.
+- Put the method in the text before asking for it: exercises practise what the course taught.
 
 ## Phones first
 
@@ -90,6 +110,8 @@ read well on a small screen too:
   readable when the image is 340 px wide (about 14 px or larger at that size). Prefer portrait or square
   images for tall content.
 - **Formulas and code**: keep lines short (about 40 characters); break long formulas into steps.
+- **Practice on a phone**: matching, categorize and blanks work by tapping and typing, but keep `matching` to
+  about 6 pairs, blank texts to a few lines, and playground code to about 25 lines.
 
 `coursmith validate` reports layouts that do not fit a phone as `mobile.*` warnings: fix them unless the
 content really needs the space.
@@ -102,7 +124,9 @@ content really needs the space.
 - Distractors are plausible and similar in length to the correct answer; avoid "all of the above".
 - The `explanation` says why the answer is right (and, when useful, why a tempting option is wrong), and is
   consistent with the course text.
-- Mix types: mostly `single` and `multiple`, a few `true_false` and at most one or two `ordering`.
+- Mix types: concepts with `single`, `multiple`, `true_false` and `matching`; application with `numeric`,
+  `expression`, `fill_blanks`, `chem_balance` or `image_point` where the subject allows. At most one or two
+  `ordering`.
 - Passing requires 70%, so the quiz must be answerable from the course content alone.
 
 ## Before you submit

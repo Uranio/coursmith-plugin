@@ -1055,7 +1055,12 @@
                                   "cylinder",
                                   "cone",
                                   "torus",
-                                  "plane"
+                                  "plane",
+                                  "capsule",
+                                  "ring",
+                                  "tetrahedron",
+                                  "octahedron",
+                                  "icosahedron"
                                 ]
                               },
                               "position": {
@@ -1163,6 +1168,36 @@
                                 "type": "string",
                                 "minLength": 1,
                                 "maxLength": 60
+                              },
+                              "info": {
+                                "description": "Shown when the learner taps the object: what this part is and does.",
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 400
+                              },
+                              "explode": {
+                                "description": "Offset the object moves by when the learner opens the exploded view (a slider appears).",
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
                               },
                               "motion": {
                                 "description": "spin: around its own center; orbit: around the scene origin; bob: up and down; pulse: grows and shrinks.",
@@ -1276,6 +1311,63 @@
                             "additionalProperties": false
                           }
                         },
+                        "lines": {
+                          "default": [],
+                          "description": "Polylines: orbits, trajectories, field lines, edges of a shape.",
+                          "maxItems": 20,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "points": {
+                                "minItems": 2,
+                                "maxItems": 200,
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                }
+                              },
+                              "color": {
+                                "default": "#f5f5f7",
+                                "type": "string",
+                                "pattern": "^#[0-9a-fA-F]{6}$"
+                              },
+                              "closed": {
+                                "default": false,
+                                "type": "boolean"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "points"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "camera": {
                           "type": "object",
                           "properties": {
@@ -1335,6 +1427,83 @@
                             "position"
                           ],
                           "additionalProperties": false
+                        },
+                        "tour": {
+                          "description": "Guided views: the camera glides to each stop while its text is shown.",
+                          "minItems": 2,
+                          "maxItems": 10,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
+                              "text": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 400
+                              },
+                              "position": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              },
+                              "target": {
+                                "default": [
+                                  0,
+                                  0,
+                                  0
+                                ],
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3
+                              }
+                            },
+                            "required": [
+                              "title",
+                              "position"
+                            ],
+                            "additionalProperties": false
+                          }
                         },
                         "autoRotate": {
                           "default": false,
@@ -1422,6 +1591,304 @@
                         "type",
                         "asset",
                         "spots"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "molecule"
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "atoms": {
+                          "minItems": 1,
+                          "maxItems": 300,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "element": {
+                                "type": "string",
+                                "pattern": "^[A-Z][a-z]?$"
+                              },
+                              "position": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": -1000,
+                                    "maximum": 1000
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "description": "Coordinates in ångström."
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              }
+                            },
+                            "required": [
+                              "element",
+                              "position"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "bonds": {
+                          "default": [],
+                          "maxItems": 400,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "a": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991,
+                                "description": "Index of the first atom in `atoms`."
+                              },
+                              "b": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "order": {
+                                "default": 1,
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "const": 1
+                                  },
+                                  {
+                                    "type": "number",
+                                    "const": 2
+                                  },
+                                  {
+                                    "type": "number",
+                                    "const": 3
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "a",
+                              "b"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "style": {
+                          "default": "ball-and-stick",
+                          "type": "string",
+                          "enum": [
+                            "ball-and-stick",
+                            "space-filling",
+                            "sticks"
+                          ]
+                        },
+                        "autoRotate": {
+                          "default": true,
+                          "type": "boolean"
+                        },
+                        "caption": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "atoms"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "dynamics"
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "description": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        },
+                        "controls": {
+                          "default": [],
+                          "description": "Parameter sliders, usable in every formula.",
+                          "minItems": 1,
+                          "maxItems": 6,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "type": "number"
+                              },
+                              "step": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              },
+                              "value": {
+                                "type": "number",
+                                "description": "Starting value, between min and max."
+                              },
+                              "unit": {
+                                "type": "string",
+                                "maxLength": 12
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "label",
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "variables": {
+                          "minItems": 1,
+                          "maxItems": 4,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "initial": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "description": "Starting value; may use the controls."
+                              },
+                              "rate": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "description": "How fast it changes (its derivative over time); may use the controls, every variable and t."
+                              },
+                              "unit": {
+                                "type": "string",
+                                "maxLength": 12
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "label",
+                              "initial",
+                              "rate"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Quantities that evolve over time, e.g. population, position, velocity, charge."
+                        },
+                        "time": {
+                          "type": "object",
+                          "properties": {
+                            "to": {
+                              "type": "number",
+                              "exclusiveMinimum": 0,
+                              "maximum": 1000000,
+                              "description": "Simulated duration."
+                            },
+                            "unit": {
+                              "type": "string",
+                              "maxLength": 12
+                            },
+                            "label": {
+                              "default": "Time",
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 40
+                            }
+                          },
+                          "required": [
+                            "to"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "chart": {
+                          "type": "object",
+                          "properties": {
+                            "yLabel": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 60
+                            },
+                            "yMin": {
+                              "type": "number"
+                            },
+                            "yMax": {
+                              "type": "number"
+                            },
+                            "phase": {
+                              "default": false,
+                              "description": "With exactly two variables, also plot one against the other (phase portrait).",
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "yLabel"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "caption": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "variables",
+                        "time"
                       ],
                       "additionalProperties": false
                     }
@@ -2444,7 +2911,12 @@
                                     "cylinder",
                                     "cone",
                                     "torus",
-                                    "plane"
+                                    "plane",
+                                    "capsule",
+                                    "ring",
+                                    "tetrahedron",
+                                    "octahedron",
+                                    "icosahedron"
                                   ]
                                 },
                                 "position": {
@@ -2552,6 +3024,36 @@
                                   "type": "string",
                                   "minLength": 1,
                                   "maxLength": 60
+                                },
+                                "info": {
+                                  "description": "Shown when the learner taps the object: what this part is and does.",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 400
+                                },
+                                "explode": {
+                                  "description": "Offset the object moves by when the learner opens the exploded view (a slider appears).",
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
                                 },
                                 "motion": {
                                   "description": "spin: around its own center; orbit: around the scene origin; bob: up and down; pulse: grows and shrinks.",
@@ -2665,6 +3167,63 @@
                               "additionalProperties": false
                             }
                           },
+                          "lines": {
+                            "default": [],
+                            "description": "Polylines: orbits, trajectories, field lines, edges of a shape.",
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "points": {
+                                  "minItems": 2,
+                                  "maxItems": 200,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "prefixItems": [
+                                      {
+                                        "type": "number",
+                                        "minimum": -1000,
+                                        "maximum": 1000
+                                      },
+                                      {
+                                        "type": "number",
+                                        "minimum": -1000,
+                                        "maximum": 1000
+                                      },
+                                      {
+                                        "type": "number",
+                                        "minimum": -1000,
+                                        "maximum": 1000
+                                      }
+                                    ],
+                                    "items": false,
+                                    "minItems": 3,
+                                    "maxItems": 3
+                                  }
+                                },
+                                "color": {
+                                  "default": "#f5f5f7",
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                },
+                                "closed": {
+                                  "default": false,
+                                  "type": "boolean"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                }
+                              },
+                              "required": [
+                                "points"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
                           "camera": {
                             "type": "object",
                             "properties": {
@@ -2724,6 +3283,83 @@
                               "position"
                             ],
                             "additionalProperties": false
+                          },
+                          "tour": {
+                            "description": "Guided views: the camera glides to each stop while its text is shown.",
+                            "minItems": 2,
+                            "maxItems": 10,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 400
+                                },
+                                "position": {
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                },
+                                "target": {
+                                  "default": [
+                                    0,
+                                    0,
+                                    0
+                                  ],
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                }
+                              },
+                              "required": [
+                                "title",
+                                "position"
+                              ],
+                              "additionalProperties": false
+                            }
                           },
                           "autoRotate": {
                             "default": false,
@@ -2855,6 +3491,1818 @@
                         "required": [
                           "type",
                           "cards"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "molecule"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "atoms": {
+                            "minItems": 1,
+                            "maxItems": 300,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "element": {
+                                  "type": "string",
+                                  "pattern": "^[A-Z][a-z]?$"
+                                },
+                                "position": {
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": -1000,
+                                      "maximum": 1000
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 3,
+                                  "maxItems": 3,
+                                  "description": "Coordinates in ångström."
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 40
+                                }
+                              },
+                              "required": [
+                                "element",
+                                "position"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "bonds": {
+                            "default": [],
+                            "maxItems": 400,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "a": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991,
+                                  "description": "Index of the first atom in `atoms`."
+                                },
+                                "b": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "order": {
+                                  "default": 1,
+                                  "anyOf": [
+                                    {
+                                      "type": "number",
+                                      "const": 1
+                                    },
+                                    {
+                                      "type": "number",
+                                      "const": 2
+                                    },
+                                    {
+                                      "type": "number",
+                                      "const": 3
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "a",
+                                "b"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "style": {
+                            "default": "ball-and-stick",
+                            "type": "string",
+                            "enum": [
+                              "ball-and-stick",
+                              "space-filling",
+                              "sticks"
+                            ]
+                          },
+                          "autoRotate": {
+                            "default": true,
+                            "type": "boolean"
+                          },
+                          "caption": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "atoms"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "dynamics"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "description": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          },
+                          "controls": {
+                            "default": [],
+                            "description": "Parameter sliders, usable in every formula.",
+                            "minItems": 1,
+                            "maxItems": 6,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "min": {
+                                  "type": "number"
+                                },
+                                "max": {
+                                  "type": "number"
+                                },
+                                "step": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "description": "Starting value, between min and max."
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "maxLength": 12
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label",
+                                "min",
+                                "max",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "variables": {
+                            "minItems": 1,
+                            "maxItems": 4,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "initial": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "description": "Starting value; may use the controls."
+                                },
+                                "rate": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "description": "How fast it changes (its derivative over time); may use the controls, every variable and t."
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "maxLength": 12
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label",
+                                "initial",
+                                "rate"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "description": "Quantities that evolve over time, e.g. population, position, velocity, charge."
+                          },
+                          "time": {
+                            "type": "object",
+                            "properties": {
+                              "to": {
+                                "type": "number",
+                                "exclusiveMinimum": 0,
+                                "maximum": 1000000,
+                                "description": "Simulated duration."
+                              },
+                              "unit": {
+                                "type": "string",
+                                "maxLength": 12
+                              },
+                              "label": {
+                                "default": "Time",
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              }
+                            },
+                            "required": [
+                              "to"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "chart": {
+                            "type": "object",
+                            "properties": {
+                              "yLabel": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "yMin": {
+                                "type": "number"
+                              },
+                              "yMax": {
+                                "type": "number"
+                              },
+                              "phase": {
+                                "default": false,
+                                "description": "With exactly two variables, also plot one against the other (phase portrait).",
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "yLabel"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "caption": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "variables",
+                          "time"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "worked_example"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "problem": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20000,
+                            "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                          },
+                          "steps": {
+                            "minItems": 2,
+                            "maxItems": 12,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 20000,
+                                  "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                },
+                                "tex": {
+                                  "description": "A formula shown under the text (LaTeX).",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 2000
+                                }
+                              },
+                              "required": [
+                                "text"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "description": "Revealed one at a time."
+                          },
+                          "result": {
+                            "description": "The final answer, highlighted at the end.",
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20000
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "problem",
+                          "steps"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "exercise"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "level": {
+                            "type": "string",
+                            "enum": [
+                              "easy",
+                              "medium",
+                              "hard"
+                            ]
+                          },
+                          "problem": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20000,
+                            "description": "The problem statement, with the data the learner needs."
+                          },
+                          "parts": {
+                            "minItems": 1,
+                            "maxItems": 6,
+                            "type": "array",
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "single"
+                                    },
+                                    "options": {
+                                      "minItems": 2,
+                                      "maxItems": 6,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                          },
+                                          "text": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "text"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "correct": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "The `id` of the correct option."
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "options",
+                                    "correct"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "multiple"
+                                    },
+                                    "options": {
+                                      "minItems": 3,
+                                      "maxItems": 8,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                          },
+                                          "text": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "text"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "correct": {
+                                      "minItems": 1,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                        "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                      },
+                                      "description": "The `id`s of all correct options."
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "options",
+                                    "correct"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "true_false"
+                                    },
+                                    "correct": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "correct"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "ordering"
+                                    },
+                                    "items": {
+                                      "minItems": 3,
+                                      "maxItems": 8,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                          },
+                                          "text": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "text"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "description": "Listed in the CORRECT order; the portal shuffles them."
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "items"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "matching"
+                                    },
+                                    "pairs": {
+                                      "minItems": 3,
+                                      "maxItems": 8,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                          },
+                                          "left": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 200
+                                          },
+                                          "right": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 200
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "left",
+                                          "right"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "description": "Each left item with its matching right item; the portal shuffles the right column."
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "pairs"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "categorize"
+                                    },
+                                    "categories": {
+                                      "minItems": 2,
+                                      "maxItems": 4,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                          },
+                                          "label": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 60
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "label"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "items": {
+                                      "minItems": 3,
+                                      "maxItems": 12,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                          },
+                                          "text": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 160
+                                          },
+                                          "category": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "The `id` of the right category."
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "text",
+                                          "category"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "categories",
+                                    "items"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "fill_blanks"
+                                    },
+                                    "text": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1500,
+                                      "description": "Plain text with a {{blank-id}} placeholder where each blank goes."
+                                    },
+                                    "blanks": {
+                                      "minItems": 1,
+                                      "maxItems": 10,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                          },
+                                          "answers": {
+                                            "minItems": 1,
+                                            "maxItems": 10,
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 80
+                                            },
+                                            "description": "Accepted answers. Case, extra spaces and accents are ignored unless caseSensitive."
+                                          },
+                                          "options": {
+                                            "description": "Choices for a drop-down; one must be among `answers`. Without options the learner types the answer.",
+                                            "minItems": 2,
+                                            "maxItems": 6,
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 80
+                                            }
+                                          },
+                                          "caseSensitive": {
+                                            "default": false,
+                                            "description": "Set for chemical symbols, DNA bases and the like.",
+                                            "type": "boolean"
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "answers"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "text",
+                                    "blanks"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "numeric"
+                                    },
+                                    "answer": {
+                                      "type": "number"
+                                    },
+                                    "tolerance": {
+                                      "description": "Accepted absolute difference, e.g. 0.05.",
+                                      "type": "number",
+                                      "minimum": 0
+                                    },
+                                    "tolerancePercent": {
+                                      "description": "Accepted relative difference in percent, e.g. 2.",
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 50
+                                    },
+                                    "unit": {
+                                      "description": "Shown next to the input, e.g. m/s, mol, J.",
+                                      "type": "string",
+                                      "maxLength": 20
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "answer"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "expression"
+                                    },
+                                    "answer": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "description": "A correct expression; any equivalent one is accepted (checked numerically at random points)."
+                                    },
+                                    "variables": {
+                                      "minItems": 1,
+                                      "maxItems": 4,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                                      },
+                                      "description": "Variables the learner may use, e.g. [\"x\"]."
+                                    },
+                                    "domain": {
+                                      "default": [
+                                        -5,
+                                        5
+                                      ],
+                                      "description": "Range the variables are sampled from when comparing expressions; use [0.5, 5] for logs and roots.",
+                                      "type": "array",
+                                      "prefixItems": [
+                                        {
+                                          "type": "number"
+                                        },
+                                        {
+                                          "type": "number"
+                                        }
+                                      ],
+                                      "items": false,
+                                      "minItems": 2,
+                                      "maxItems": 2
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "answer",
+                                    "variables"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "image_point"
+                                    },
+                                    "asset": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "The image the learner taps."
+                                    },
+                                    "targets": {
+                                      "minItems": 1,
+                                      "maxItems": 3,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "x": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 100,
+                                            "description": "Percent from the left edge."
+                                          },
+                                          "y": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 100,
+                                            "description": "Percent from the top edge."
+                                          },
+                                          "radius": {
+                                            "default": 8,
+                                            "description": "Accepted distance, in percent of the image width.",
+                                            "type": "number",
+                                            "minimum": 2,
+                                            "maximum": 40
+                                          }
+                                        },
+                                        "required": [
+                                          "x",
+                                          "y"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "asset",
+                                    "targets"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                    },
+                                    "prompt": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 600
+                                    },
+                                    "explanation": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1200,
+                                      "description": "Why the correct answer is correct; shown after answering."
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "const": "chem_balance"
+                                    },
+                                    "species": {
+                                      "minItems": 2,
+                                      "maxItems": 8,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "formula": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 60,
+                                            "description": "H2O, Ca(OH)2, SO4^2-, CuSO4·5H2O, e^-."
+                                          },
+                                          "side": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reactant",
+                                              "product"
+                                            ]
+                                          },
+                                          "coefficient": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 99,
+                                            "description": "Coefficient in the balanced equation."
+                                          }
+                                        },
+                                        "required": [
+                                          "formula",
+                                          "side",
+                                          "coefficient"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "prompt",
+                                    "explanation",
+                                    "type",
+                                    "species"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ],
+                              "description": "Optional practice question with immediate feedback (not scored)."
+                            },
+                            "description": "What the learner answers: (a), (b), (c)…"
+                          },
+                          "hints": {
+                            "default": [],
+                            "description": "Revealed one at a time on request.",
+                            "maxItems": 5,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 400
+                            }
+                          },
+                          "solution": {
+                            "default": [],
+                            "description": "Full worked solution, offered after a first try.",
+                            "maxItems": 12,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 20000,
+                                  "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                },
+                                "tex": {
+                                  "description": "A formula shown under the text (LaTeX).",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 2000
+                                }
+                              },
+                              "required": [
+                                "text"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "problem",
+                          "parts"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "details"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120,
+                            "description": "e.g. \"Want to go deeper?\", \"Proof\", \"Historical note\"."
+                          },
+                          "blocks": {
+                            "minItems": 1,
+                            "maxItems": 10,
+                            "type": "array",
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "markdown"
+                                    },
+                                    "text": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 20000,
+                                      "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "text"
+                                  ],
+                                  "additionalProperties": false,
+                                  "description": "Paragraphs, lists, emphasis, links (https only), inline code."
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "callout"
+                                    },
+                                    "variant": {
+                                      "type": "string",
+                                      "enum": [
+                                        "info",
+                                        "tip",
+                                        "warning",
+                                        "example"
+                                      ]
+                                    },
+                                    "title": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 120
+                                    },
+                                    "text": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 20000,
+                                      "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "variant",
+                                    "text"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "image"
+                                    },
+                                    "asset": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                      "description": "The `id` of an entry in `assets`."
+                                    },
+                                    "caption": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "asset"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "code"
+                                    },
+                                    "language": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9+#.-]{1,30}$",
+                                      "description": "Language for syntax highlighting, e.g. python, ts, bash."
+                                    },
+                                    "code": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 10000
+                                    },
+                                    "caption": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "language",
+                                    "code"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "math"
+                                    },
+                                    "tex": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 4000,
+                                      "description": "LaTeX rendered with KaTeX."
+                                    },
+                                    "caption": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "tex"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "table"
+                                    },
+                                    "headers": {
+                                      "minItems": 1,
+                                      "maxItems": 10,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 200
+                                      }
+                                    },
+                                    "rows": {
+                                      "minItems": 1,
+                                      "maxItems": 50,
+                                      "type": "array",
+                                      "items": {
+                                        "minItems": 1,
+                                        "maxItems": 10,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "maxLength": 500
+                                        }
+                                      }
+                                    },
+                                    "caption": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "headers",
+                                    "rows"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "quote"
+                                    },
+                                    "text": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 20000,
+                                      "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                    },
+                                    "cite": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 200
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "text"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title",
+                          "blocks"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "tabs"
+                          },
+                          "tabs": {
+                            "minItems": 2,
+                            "maxItems": 6,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 40
+                                },
+                                "blocks": {
+                                  "minItems": 1,
+                                  "maxItems": 10,
+                                  "type": "array",
+                                  "items": {
+                                    "oneOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "type": "string",
+                                            "const": "markdown"
+                                          },
+                                          "text": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 20000,
+                                            "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                          }
+                                        },
+                                        "required": [
+                                          "type",
+                                          "text"
+                                        ],
+                                        "additionalProperties": false,
+                                        "description": "Paragraphs, lists, emphasis, links (https only), inline code."
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "type": "string",
+                                            "const": "callout"
+                                          },
+                                          "variant": {
+                                            "type": "string",
+                                            "enum": [
+                                              "info",
+                                              "tip",
+                                              "warning",
+                                              "example"
+                                            ]
+                                          },
+                                          "title": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 120
+                                          },
+                                          "text": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 20000,
+                                            "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                          }
+                                        },
+                                        "required": [
+                                          "type",
+                                          "variant",
+                                          "text"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "type": "string",
+                                            "const": "image"
+                                          },
+                                          "asset": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                            "description": "The `id` of an entry in `assets`."
+                                          },
+                                          "caption": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300
+                                          }
+                                        },
+                                        "required": [
+                                          "type",
+                                          "asset"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "type": "string",
+                                            "const": "code"
+                                          },
+                                          "language": {
+                                            "type": "string",
+                                            "pattern": "^[a-z0-9+#.-]{1,30}$",
+                                            "description": "Language for syntax highlighting, e.g. python, ts, bash."
+                                          },
+                                          "code": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 10000
+                                          },
+                                          "caption": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300
+                                          }
+                                        },
+                                        "required": [
+                                          "type",
+                                          "language",
+                                          "code"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "type": "string",
+                                            "const": "math"
+                                          },
+                                          "tex": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 4000,
+                                            "description": "LaTeX rendered with KaTeX."
+                                          },
+                                          "caption": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300
+                                          }
+                                        },
+                                        "required": [
+                                          "type",
+                                          "tex"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "type": "string",
+                                            "const": "table"
+                                          },
+                                          "headers": {
+                                            "minItems": 1,
+                                            "maxItems": 10,
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 200
+                                            }
+                                          },
+                                          "rows": {
+                                            "minItems": 1,
+                                            "maxItems": 50,
+                                            "type": "array",
+                                            "items": {
+                                              "minItems": 1,
+                                              "maxItems": 10,
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string",
+                                                "maxLength": 500
+                                              }
+                                            }
+                                          },
+                                          "caption": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300
+                                          }
+                                        },
+                                        "required": [
+                                          "type",
+                                          "headers",
+                                          "rows"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "type": "string",
+                                            "const": "quote"
+                                          },
+                                          "text": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 20000,
+                                            "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                          },
+                                          "cite": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 200
+                                          }
+                                        },
+                                        "required": [
+                                          "type",
+                                          "text"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "blocks"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tabs"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "scenario"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "start": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                            "description": "The `id` of the first node."
+                          },
+                          "nodes": {
+                            "minItems": 2,
+                            "maxItems": 30,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                  "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 20000,
+                                  "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                                },
+                                "choices": {
+                                  "default": [],
+                                  "maxItems": 4,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "text": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 200
+                                      },
+                                      "next": {
+                                        "type": "string",
+                                        "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                        "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                                      },
+                                      "feedback": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 400
+                                      }
+                                    },
+                                    "required": [
+                                      "text",
+                                      "next"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "ending": {
+                                  "description": "Marks a node without choices as an ending.",
+                                  "type": "string",
+                                  "enum": [
+                                    "success",
+                                    "failure",
+                                    "neutral"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "text"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "start",
+                          "nodes"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "playground"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "language": {
+                            "type": "string",
+                            "enum": [
+                              "javascript",
+                              "python"
+                            ]
+                          },
+                          "instructions": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20000,
+                            "description": "Markdown (CommonMark subset, no raw HTML, no images). Mark glossary terms as [[term]] or [[term|shown text]]."
+                          },
+                          "code": {
+                            "type": "string",
+                            "maxLength": 10000,
+                            "description": "Starter code the learner edits and runs."
+                          },
+                          "tests": {
+                            "default": [],
+                            "maxItems": 10,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 120,
+                                  "description": "What the test checks, shown to the learner."
+                                },
+                                "check": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 500,
+                                  "description": "An expression that is true when the code is right, e.g. add(2, 3) == 5."
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "check"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "solution": {
+                            "type": "string",
+                            "maxLength": 10000
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "language",
+                          "code"
                         ],
                         "additionalProperties": false
                       }
@@ -3031,9 +5479,572 @@
                         "correct"
                       ],
                       "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "ordering"
+                        },
+                        "items": {
+                          "minItems": 3,
+                          "maxItems": 8,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                              },
+                              "text": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "text"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Listed in the CORRECT order; the portal shuffles them."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "items"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "matching"
+                        },
+                        "pairs": {
+                          "minItems": 3,
+                          "maxItems": 8,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                              },
+                              "left": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              },
+                              "right": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "left",
+                              "right"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Each left item with its matching right item; the portal shuffles the right column."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "pairs"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "categorize"
+                        },
+                        "categories": {
+                          "minItems": 2,
+                          "maxItems": 4,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "items": {
+                          "minItems": 3,
+                          "maxItems": 12,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                              },
+                              "text": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 160
+                              },
+                              "category": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                "description": "The `id` of the right category."
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "text",
+                              "category"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "categories",
+                        "items"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "fill_blanks"
+                        },
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1500,
+                          "description": "Plain text with a {{blank-id}} placeholder where each blank goes."
+                        },
+                        "blanks": {
+                          "minItems": 1,
+                          "maxItems": 10,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                                "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                              },
+                              "answers": {
+                                "minItems": 1,
+                                "maxItems": 10,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
+                                "description": "Accepted answers. Case, extra spaces and accents are ignored unless caseSensitive."
+                              },
+                              "options": {
+                                "description": "Choices for a drop-down; one must be among `answers`. Without options the learner types the answer.",
+                                "minItems": 2,
+                                "maxItems": 6,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                }
+                              },
+                              "caseSensitive": {
+                                "default": false,
+                                "description": "Set for chemical symbols, DNA bases and the like.",
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "answers"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "text",
+                        "blanks"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "numeric"
+                        },
+                        "answer": {
+                          "type": "number"
+                        },
+                        "tolerance": {
+                          "description": "Accepted absolute difference, e.g. 0.05.",
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "tolerancePercent": {
+                          "description": "Accepted relative difference in percent, e.g. 2.",
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 50
+                        },
+                        "unit": {
+                          "description": "Shown next to the input, e.g. m/s, mol, J.",
+                          "type": "string",
+                          "maxLength": 20
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "answer"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "expression"
+                        },
+                        "answer": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "description": "A correct expression; any equivalent one is accepted (checked numerically at random points)."
+                        },
+                        "variables": {
+                          "minItems": 1,
+                          "maxItems": 4,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                          },
+                          "description": "Variables the learner may use, e.g. [\"x\"]."
+                        },
+                        "domain": {
+                          "default": [
+                            -5,
+                            5
+                          ],
+                          "description": "Range the variables are sampled from when comparing expressions; use [0.5, 5] for logs and roots.",
+                          "type": "array",
+                          "prefixItems": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ],
+                          "items": false,
+                          "minItems": 2,
+                          "maxItems": 2
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "answer",
+                        "variables"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "image_point"
+                        },
+                        "asset": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "The image the learner taps."
+                        },
+                        "targets": {
+                          "minItems": 1,
+                          "maxItems": 3,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "description": "Percent from the left edge."
+                              },
+                              "y": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "description": "Percent from the top edge."
+                              },
+                              "radius": {
+                                "default": 8,
+                                "description": "Accepted distance, in percent of the image width.",
+                                "type": "number",
+                                "minimum": 2,
+                                "maximum": 40
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "asset",
+                        "targets"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "Why the correct answer is correct; shown after answering."
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "chem_balance"
+                        },
+                        "species": {
+                          "minItems": 2,
+                          "maxItems": 8,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "formula": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60,
+                                "description": "H2O, Ca(OH)2, SO4^2-, CuSO4·5H2O, e^-."
+                              },
+                              "side": {
+                                "type": "string",
+                                "enum": [
+                                  "reactant",
+                                  "product"
+                                ]
+                              },
+                              "coefficient": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 99,
+                                "description": "Coefficient in the balanced equation."
+                              }
+                            },
+                            "required": [
+                              "formula",
+                              "side",
+                              "coefficient"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "prompt",
+                        "explanation",
+                        "type",
+                        "species"
+                      ],
+                      "additionalProperties": false
                     }
                   ],
-                  "description": "Optional quick check at the end of a step (not scored)."
+                  "description": "Optional practice question with immediate feedback (not scored)."
                 }
               },
               "required": [
@@ -3231,7 +6242,7 @@
                   "sectionRef": {
                     "type": "string",
                     "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
-                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                    "description": "Section this question tests."
                   }
                 },
                 "required": [
@@ -3274,7 +6285,7 @@
                   "sectionRef": {
                     "type": "string",
                     "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
-                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                    "description": "Section this question tests."
                   }
                 },
                 "required": [
@@ -3339,7 +6350,7 @@
                   "sectionRef": {
                     "type": "string",
                     "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
-                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                    "description": "Section this question tests."
                   }
                 },
                 "required": [
@@ -3348,6 +6359,552 @@
                   "explanation",
                   "type",
                   "items",
+                  "sectionRef"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "description": "Why the correct answer is correct; shown after answering."
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "matching"
+                  },
+                  "pairs": {
+                    "minItems": 3,
+                    "maxItems": 8,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "left": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "right": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "left",
+                        "right"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Each left item with its matching right item; the portal shuffles the right column."
+                  },
+                  "sectionRef": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Section this question tests."
+                  }
+                },
+                "required": [
+                  "id",
+                  "prompt",
+                  "explanation",
+                  "type",
+                  "pairs",
+                  "sectionRef"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "description": "Why the correct answer is correct; shown after answering."
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "categorize"
+                  },
+                  "categories": {
+                    "minItems": 2,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "items": {
+                    "minItems": 3,
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 160
+                        },
+                        "category": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "The `id` of the right category."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "text",
+                        "category"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "sectionRef": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Section this question tests."
+                  }
+                },
+                "required": [
+                  "id",
+                  "prompt",
+                  "explanation",
+                  "type",
+                  "categories",
+                  "items",
+                  "sectionRef"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "description": "Why the correct answer is correct; shown after answering."
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "fill_blanks"
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1500,
+                    "description": "Plain text with a {{blank-id}} placeholder where each blank goes."
+                  },
+                  "blanks": {
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                          "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                        },
+                        "answers": {
+                          "minItems": 1,
+                          "maxItems": 10,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "description": "Accepted answers. Case, extra spaces and accents are ignored unless caseSensitive."
+                        },
+                        "options": {
+                          "description": "Choices for a drop-down; one must be among `answers`. Without options the learner types the answer.",
+                          "minItems": 2,
+                          "maxItems": 6,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          }
+                        },
+                        "caseSensitive": {
+                          "default": false,
+                          "description": "Set for chemical symbols, DNA bases and the like.",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "answers"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "sectionRef": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Section this question tests."
+                  }
+                },
+                "required": [
+                  "id",
+                  "prompt",
+                  "explanation",
+                  "type",
+                  "text",
+                  "blanks",
+                  "sectionRef"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "description": "Why the correct answer is correct; shown after answering."
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "numeric"
+                  },
+                  "answer": {
+                    "type": "number"
+                  },
+                  "tolerance": {
+                    "description": "Accepted absolute difference, e.g. 0.05.",
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "tolerancePercent": {
+                    "description": "Accepted relative difference in percent, e.g. 2.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 50
+                  },
+                  "unit": {
+                    "description": "Shown next to the input, e.g. m/s, mol, J.",
+                    "type": "string",
+                    "maxLength": 20
+                  },
+                  "sectionRef": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Section this question tests."
+                  }
+                },
+                "required": [
+                  "id",
+                  "prompt",
+                  "explanation",
+                  "type",
+                  "answer",
+                  "sectionRef"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "description": "Why the correct answer is correct; shown after answering."
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "expression"
+                  },
+                  "answer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300,
+                    "description": "A correct expression; any equivalent one is accepted (checked numerically at random points)."
+                  },
+                  "variables": {
+                    "minItems": 1,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-zA-Z0-9_]{0,23}$"
+                    },
+                    "description": "Variables the learner may use, e.g. [\"x\"]."
+                  },
+                  "domain": {
+                    "default": [
+                      -5,
+                      5
+                    ],
+                    "description": "Range the variables are sampled from when comparing expressions; use [0.5, 5] for logs and roots.",
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "sectionRef": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Section this question tests."
+                  }
+                },
+                "required": [
+                  "id",
+                  "prompt",
+                  "explanation",
+                  "type",
+                  "answer",
+                  "variables",
+                  "sectionRef"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "description": "Why the correct answer is correct; shown after answering."
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "image_point"
+                  },
+                  "asset": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "The image the learner taps."
+                  },
+                  "targets": {
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100,
+                          "description": "Percent from the left edge."
+                        },
+                        "y": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100,
+                          "description": "Percent from the top edge."
+                        },
+                        "radius": {
+                          "default": 8,
+                          "description": "Accepted distance, in percent of the image width.",
+                          "type": "number",
+                          "minimum": 2,
+                          "maximum": 40
+                        }
+                      },
+                      "required": [
+                        "x",
+                        "y"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "sectionRef": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Section this question tests."
+                  }
+                },
+                "required": [
+                  "id",
+                  "prompt",
+                  "explanation",
+                  "type",
+                  "asset",
+                  "targets",
+                  "sectionRef"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Stable identifier: lowercase letters, digits and dashes. Keep it unchanged across versions."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "description": "Why the correct answer is correct; shown after answering."
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "chem_balance"
+                  },
+                  "species": {
+                    "minItems": 2,
+                    "maxItems": 8,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "formula": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60,
+                          "description": "H2O, Ca(OH)2, SO4^2-, CuSO4·5H2O, e^-."
+                        },
+                        "side": {
+                          "type": "string",
+                          "enum": [
+                            "reactant",
+                            "product"
+                          ]
+                        },
+                        "coefficient": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 99,
+                          "description": "Coefficient in the balanced equation."
+                        }
+                      },
+                      "required": [
+                        "formula",
+                        "side",
+                        "coefficient"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "sectionRef": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                    "description": "Section this question tests."
+                  }
+                },
+                "required": [
+                  "id",
+                  "prompt",
+                  "explanation",
+                  "type",
+                  "species",
                   "sectionRef"
                 ],
                 "additionalProperties": false

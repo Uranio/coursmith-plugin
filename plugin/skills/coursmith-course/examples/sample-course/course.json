@@ -363,7 +363,30 @@
               "code": "flowchart LR\n  P[Power plant] --> U[Step-up substation]\n  U --> T[Transmission lines]\n  T --> D[Step-down substation]\n  D --> L[Distribution lines]\n  L --> H[Homes]",
               "caption": "The same journey as a diagram."
             }
-          ]
+          ],
+          "check": {
+            "id": "check-journey-units",
+            "type": "matching",
+            "prompt": "Match each part of the grid with what it does.",
+            "pairs": [
+              {
+                "id": "plant",
+                "left": "Power plant",
+                "right": "Produces electricity"
+              },
+              {
+                "id": "lines",
+                "left": "High-voltage lines",
+                "right": "Carry it over long distances"
+              },
+              {
+                "id": "substation",
+                "left": "Substation",
+                "right": "Lowers the voltage for towns"
+              }
+            ],
+            "explanation": "Plants generate, high-voltage lines transmit, substations step the voltage down for distribution."
+          }
         },
         {
           "id": "balance",
@@ -507,7 +530,21 @@
               "variant": "warning",
               "text": "Never open the electrical panel's cover yourself: any work inside it must be done by a qualified electrician."
             }
-          ]
+          ],
+          "check": {
+            "id": "check-meter",
+            "type": "image_point",
+            "prompt": "Tap the meter on the panel.",
+            "asset": "home-panel",
+            "targets": [
+              {
+                "x": 50,
+                "y": 15,
+                "radius": 10
+              }
+            ],
+            "explanation": "The meter sits at the top of the panel and counts the kilowatt-hours."
+          }
         },
         {
           "id": "bill",
@@ -522,6 +559,62 @@
               "variant": "example",
               "title": "Quick calculation",
               "text": "A 2 [[kilowatt|kW]] oven used for 1.5 hours consumes 2 × 1.5 = 3 kWh."
+            },
+            {
+              "type": "worked_example",
+              "title": "The cost of a heater",
+              "problem": "A 2,000 W heater runs 4 hours a day for 30 days. Electricity costs 0.25 € per kWh. How much does it cost?",
+              "steps": [
+                {
+                  "text": "Convert the power to kilowatts and multiply by the hours.",
+                  "tex": "2\\ \\text{kW} \\times 4\\ \\text{h} \\times 30 = 240\\ \\text{kWh}"
+                },
+                {
+                  "text": "Multiply the energy by the price.",
+                  "tex": "240 \\times 0.25 = 60\\ \\text{€}"
+                }
+              ],
+              "result": "The heater costs **60 €** a month."
+            },
+            {
+              "type": "exercise",
+              "title": "Your turn: an air conditioner",
+              "level": "easy",
+              "problem": "An air conditioner uses 1,500 W and runs 6 hours a day for 30 days, at 0.25 € per kWh.",
+              "parts": [
+                {
+                  "id": "energy",
+                  "type": "numeric",
+                  "prompt": "How much energy does it use in the month?",
+                  "answer": 270,
+                  "tolerancePercent": 1,
+                  "unit": "kWh",
+                  "explanation": "1.5 kW × 6 h × 30 = 270 kWh."
+                },
+                {
+                  "id": "cost",
+                  "type": "numeric",
+                  "prompt": "How much does that cost?",
+                  "answer": 67.5,
+                  "tolerance": 0.05,
+                  "unit": "€",
+                  "explanation": "270 kWh × 0.25 € = 67.50 €."
+                }
+              ],
+              "hints": [
+                "Watts divided by 1,000 give kilowatts.",
+                "Energy (kWh) = power (kW) × hours."
+              ],
+              "solution": [
+                {
+                  "text": "Energy:",
+                  "tex": "1.5 \\times 6 \\times 30 = 270\\ \\text{kWh}"
+                },
+                {
+                  "text": "Cost:",
+                  "tex": "270 \\times 0.25 = 67.50\\ \\text{€}"
+                }
+              ]
             },
             {
               "type": "flashcards",
