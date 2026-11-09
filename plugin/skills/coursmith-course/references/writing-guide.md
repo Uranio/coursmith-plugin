@@ -74,6 +74,9 @@ Declare prerequisites in `meta.prerequisites` for intermediate and advanced cour
 - Alt text describes what the image shows and why it matters, in the course language
   ("Bar chart: gas provides 40% of electricity, the largest share"), not "image" or the file name.
 - Avoid text inside images; when unavoidable, keep it large and in the course language.
+- Show the real thing when it helps: a photo of the instrument, the place, the organism or the artwork the step
+  talks about makes it concrete. Use `coursmith image search` and `coursmith image add` (openly licensed photos with
+  their credit), look at a photo before adding it, and say in the text what the learner should notice in it.
 
 ## Practice
 

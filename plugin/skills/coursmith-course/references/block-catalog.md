@@ -113,6 +113,27 @@ The matching asset entry:
 { "id": "home-panel", "kind": "svg", "file": "assets/home-panel.svg", "alt": "Electrical panel with meter, main switch and four breakers", "generatedBy": "hand-written SVG" }
 ```
 
+A photo found with `coursmith image search` and added with `coursmith image add` carries its `source`: the page
+where it is published, its author and an open license (`CC0 1.0`, `Public domain`, `CC BY <version>` or
+`CC BY-SA <version>`; licenses with NC or ND are refused). The player shows the credit with links under the image.
+A third-party photo cannot be the cover, and an asset has either `source` or `generatedBy`, not both.
+
+```json asset
+{
+  "id": "pylons",
+  "kind": "image",
+  "file": "assets/pylons.jpg",
+  "alt": "High-voltage transmission towers carrying power lines across a field at sunset",
+  "source": {
+    "url": "https://commons.wikimedia.org/wiki/File:Transmission_towers_at_sunset_in_East_Texas.jpg",
+    "author": "Matthew T Rader",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "provider": "Wikimedia Commons"
+  }
+}
+```
+
 ### chart (Vega-Lite)
 
 A [Vega-Lite v6](https://vega.github.io/vega-lite/) spec. Rules:

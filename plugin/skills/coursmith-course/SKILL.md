@@ -105,9 +105,20 @@ Write section by section and keep the language, difficulty and terminology consi
 
 ## 5. Create the assets
 
-- A **cover image** is required (`meta.coverImage`), ideally 1200×630.
-- If you have an image-generation tool, produce PNG, JPEG or WebP files. Otherwise write clean SVG by hand:
-  simple shapes, a clear palette, `viewBox` set, no scripts, no external links or fonts, no embedded images.
+- A **cover image** is required (`meta.coverImage`), ideally 1200×630. It must be your own work (hand-written SVG
+  or a generated image), never a third-party photo: catalog cards have no room for a credit.
+- **Real photos** make a course concrete: the object, place, organism, artwork or experiment the text talks about.
+  Find openly licensed ones (public domain, CC0, CC BY, CC BY-SA) and add them with their credit:
+  1. `npx --yes coursmith@latest image search "<what it shows>" --json` (English keywords work best). Each result
+     has a `ref`, the author, the license and a small `previewUrl`.
+  2. Download the previews of the promising results and look at them: pick one that clearly shows what the step
+     explains. Never add a photo you have not seen.
+  3. `npx --yes coursmith@latest image add "<ref>" --dir <folder> --id <asset-id> --alt "<what it shows and why>" --json`
+     downloads it into `assets/` and declares it in `course.json` with a `source` (page, author, license). The
+     player shows the credit under the photo. Keep `source` exactly as written.
+  Use photos for what a photo shows best; keep diagrams, charts and animations for mechanisms and data.
+- For diagrams, if you have an image-generation tool, produce PNG, JPEG or WebP files. Otherwise write clean SVG by
+  hand: simple shapes, a clear palette, `viewBox` set, no scripts, no external links or fonts, no embedded images.
 - For a `highlight-svg` animation, give the elements to highlight an `id` attribute.
 - Put every file directly in `assets/` and declare it in `assets[]` with `kind` (`image` or `svg`), `file`
   (`assets/<name>`) and a meaningful `alt` text. Fill `generatedBy` for AI-generated images.

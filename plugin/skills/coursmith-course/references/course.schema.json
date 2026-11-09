@@ -168,6 +168,46 @@
             "minLength": 1,
             "maxLength": 200
           },
+          "source": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "maxLength": 500,
+                "format": "uri",
+                "description": "The page where the image is published, which states its author and license."
+              },
+              "author": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "The author or rights holder, as the source page names them."
+              },
+              "license": {
+                "type": "string",
+                "pattern": "^(CC0 1\\.0|Public domain|CC BY [1-4]\\.[05]|CC BY-SA [1-4]\\.[05])$",
+                "description": "Only licenses that allow reuse: public domain, CC0, CC BY and CC BY-SA (no NC, no ND)."
+              },
+              "licenseUrl": {
+                "type": "string",
+                "maxLength": 500,
+                "format": "uri"
+              },
+              "provider": {
+                "description": "Where it was found, e.g. \"Wikimedia Commons\".",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "required": [
+              "url",
+              "author",
+              "license"
+            ],
+            "additionalProperties": false,
+            "description": "A third-party image used under an open license. The player shows the credit under the image."
+          },
           "generatedBy": {
             "description": "Tool or model that produced the asset, if AI-generated.",
             "type": "string",
