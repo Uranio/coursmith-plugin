@@ -50,7 +50,8 @@ Ask, in one message, for anything the user has not already given:
 
 - **Topic** and, if useful, the angle or audience.
 - **Language** of the course (any language; you will need its BCP-47 code such as `it`, `en`, `pt-BR`).
-- **Difficulty**: `beginner`, `intermediate` or `advanced`.
+- **Difficulty**: `beginner` (middle school, ages 11–14), `intermediate` (high school, 14–19) or `advanced`
+  (university).
 - **Visibility**: `public` (listed in the catalog, the default) or `private` (shared only through a link the user
   controls from the dashboard).
 - Optional: desired length (default about 30 minutes), prerequisites, things to include or avoid.
@@ -63,14 +64,20 @@ Check the topic against the `content-policy` guide. If it is not allowed, say so
 ## 3. Propose an outline and get it approved
 
 Read the `writing-guide`, then show the user: title, subtitle and 2–6 learning objectives; 3–6 sections with a
-one-line summary and 2–5 step titles each; the visual or interactive element planned for each step; the practice
-(worked examples, exercises, scenarios, checks); the number of final quiz questions (at least 10, covering every
-section). Revise until the user agrees. Do not write `course.json` before that.
+one-line summary and 2–5 step titles each; the visual or interactive element planned for each step (and, in
+literature and philosophy, the passages you will quote); the practice (worked examples, exercises, scenarios,
+checks); for mathematics and physics, the final practice set from easy to hard; the bibliography you plan; the
+number of final quiz questions (at least 10, covering every section). Revise until the user agrees. Do not write
+`course.json` before that.
 
 ## 4. Write the course
 
 Read the `example` and the `block-catalog`. Create a new folder named after the course (kebab-case) with
 `course.json` and `assets/`, and write it section by section, keeping language, difficulty and terminology consistent.
+Then add the `practice` set (mathematics and physics) and the `bibliography` (every course), before `finalQuiz`.
+
+Be exact: check every date (births, deaths, events, works), explain every symbol of every formula, quote the texts
+you discuss in literature and philosophy, and cite only books, articles and sites you are sure exist.
 
 ## 5. Create the assets
 
@@ -80,6 +87,7 @@ Read the `example` and the `block-catalog`. Create a new folder named after the 
   1. `npx --yes coursmith@latest image search "<what it shows>" --json` (English keywords work best);
   2. download the `previewUrl` of the promising results and look at them: never add a photo you have not seen;
   3. `npx --yes coursmith@latest image add "<ref>" --dir <folder> --id <asset-id> --alt "<what it shows and why>" --json`.
+- **Sound clips** (`audio` blocks) work the same way: `audio search`, listen, `audio add`.
 - Diagrams: clean hand-written SVG (with `viewBox`, no scripts, no external links or fonts) or generated images.
 - Every file directly in `assets/`, declared in `assets[]` with a meaningful `alt`; each under 3 MB, all under 25 MB.
 
@@ -87,6 +95,9 @@ Read the `example` and the `block-catalog`. Create a new folder named after the 
 
 Run `npx --yes coursmith@latest validate <folder> --json` and fix every `error` it lists (each has a `path` and a
 `message`), then run it again until `ok` is `true`. Fix warnings too when they are cheap.
+
+Then check the facts: `npx --yes coursmith@latest cite check <folder>` (the bibliography) and, when the course has
+`person` or `lifelines` blocks, `npx --yes coursmith@latest facts check <folder>` (the dates). Fix what they report.
 
 ## 7. Submit and follow the review
 
