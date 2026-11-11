@@ -1,0 +1,19 @@
+Coursmith skill, plugin and command-line tool
+Copyright (c) 2026 Leonardo Martellini (Coursmith). All rights reserved.
+
+This software, including the coursmith-course Agent Skill, the Claude Code plugin, the coursmith
+command-line tool and the guides they download from the Coursmith service (together, the "Software"),
+is proprietary. It is not open source.
+
+You may install and use the Software only to create, validate, submit, review and manage content on the
+Coursmith service (https://coursmith.onrender.com and its successors), under that service's terms.
+
+Unless the copyright holder gives you written permission, you may not:
+  - copy, modify, translate or create derivative works of the Software, in whole or in part;
+  - redistribute, publish, sell, sublicense or make the Software available to others;
+  - use the Software, or any part of it, to create content for or operate another service or product;
+  - extract or reuse the guides served by the Coursmith service outside the Software;
+  - remove or alter this notice.
+
+The Software is provided "as is", without warranty of any kind, express or implied. In no event shall the
+copyright holder be liable for any claim, damages or other liability arising from the use of the Software.
