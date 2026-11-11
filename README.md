@@ -50,3 +50,7 @@ npx --yes coursmith@latest status --dir ./my-course --wait
 
 Refresh the CLI and skill with `npx --yes coursmith@latest setup`, then restart your agent. Full installation guide:
 <https://coursmith.onrender.com/install>.
+
+## License
+
+Proprietary: see [LICENSE](LICENSE). You may use the skill and the CLI only to create content for Coursmith.
