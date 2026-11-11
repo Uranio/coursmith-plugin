@@ -64,7 +64,9 @@ Check the topic against the `content-policy` guide. If it is not allowed, say so
 ## 3. Propose an outline and get it approved
 
 Read the `writing-guide`, then show the user: title, subtitle and 2–6 learning objectives; 3–6 sections with a
-one-line summary and 2–5 step titles each; the visual or interactive element planned for each step (and, in
+one-line summary and 2–5 step titles each; the visual or interactive element planned for each step, chosen with
+the "Balance" rules of the guide (no more than two text-only steps in a row, one main element per step, the photo
+budget for the subject) and the photos you plan (and, in
 literature and philosophy, the passages you will quote); the practice (worked examples, exercises, scenarios,
 checks); for mathematics and physics, the final practice set from easy to hard; the bibliography you plan; the
 number of final quiz questions (at least 10, covering every section). Revise until the user agrees. Do not write
@@ -94,7 +96,8 @@ you discuss in literature and philosophy, and cite only books, articles and site
 ## 6. Validate until clean
 
 Run `npx --yes coursmith@latest validate <folder> --json` and fix every `error` it lists (each has a `path` and a
-`message`), then run it again until `ok` is `true`. Fix warnings too when they are cheap.
+`message`), then run it again until `ok` is `true`. Fix warnings too when they are cheap, and always the
+`balance.*` ones (they mean the course reads as a wall of text, or has too many or too few photos).
 
 Then check the facts: `npx --yes coursmith@latest cite check <folder>` (the bibliography) and, when the course has
 `person` or `lifelines` blocks, `npx --yes coursmith@latest facts check <folder>` (the dates). Fix what they report.
