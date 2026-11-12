@@ -34,8 +34,17 @@ npx --yes coursmith@latest docs <name> --out <file>  # save one (useful for the 
 | `animation-presets` | when you plan an animation |
 | `course-schema` | the exact JSON Schema, when the validator reports a structure error you do not understand |
 | `example` | before writing: a complete `course.json` that passes validation; copy its shape |
+| `cover-example` | before drawing the cover: a cover in the house style |
+| `blueprint` | when the user's request contains a blueprint (see below) |
 
 Follow the guides exactly: the validator and the reviewer apply the same rules.
+
+## Blueprints
+
+The user may describe the course with a **blueprint**: a plan in the prompt with settings (`level: …`), one
+`# Section` heading per section and the elements it must contain (`- photo: …`, `- quiz`), often in a fenced block
+tagged `blueprint`. Then read the `blueprint` guide after logging in and follow it: it changes steps 2, 3 and 6.
+Without a blueprint, everything below applies as written.
 
 ## 1. Log in
 
@@ -83,8 +92,8 @@ you discuss in literature and philosophy, and cite only books, articles and site
 
 ## 5. Create the assets
 
-- A **cover image** is required, ideally 1200×630, and must be your own work (hand-written SVG or a generated
-  image), never a third-party photo.
+- A **cover image** is required: a hand-written SVG at 1200×630 in the house style (writing guide, "Cover":
+  paper background, ink lines, one accent, no text), never a third-party photo.
 - **Real photos** (the object, place, organism or artwork the text talks about) come with their credit:
   1. `npx --yes coursmith@latest image search "<what it shows>" --json` (English keywords work best);
   2. download the `previewUrl` of the promising results and look at them: never add a photo you have not seen;
