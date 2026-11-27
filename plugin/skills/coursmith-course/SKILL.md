@@ -99,6 +99,8 @@ you discuss in literature and philosophy, and cite only books, articles and site
   2. download the `previewUrl` of the promising results and look at them: never add a photo you have not seen;
   3. `npx --yes coursmith@latest image add "<ref>" --dir <folder> --id <asset-id> --alt "<what it shows and why>" --json`.
 - **Sound clips** (`audio` blocks) work the same way: `audio search`, listen, `audio add`.
+- **Videos** (`video` blocks) are for the Coursmith editorial account only, for now: `video check <youtube link>`
+  (official channel of the rights holder only) or `video search` (free-licence files). See `video` in the block catalog.
 - Diagrams: clean hand-written SVG (with `viewBox`, no scripts, no external links or fonts) or generated images.
 - Every file directly in `assets/`, declared in `assets[]` with a meaningful `alt`; each under 3 MB, all under 25 MB.
 
